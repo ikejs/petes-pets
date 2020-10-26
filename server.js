@@ -1,3 +1,5 @@
+// use dotenv if we have a PORT environment variable,
+// then set our NODE_ENV to development
 if (!process.env.PORT) {
   require('dotenv').config()
   process.env.NODE_ENV = "dev"
@@ -14,11 +16,11 @@ const methodOverride = require('method-override')
 const app = express();
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/petes-pets');
+mongoose.connect('mongodb://localhost/petes-pets'); // connect to db
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views')); // look in views folder for views
+app.set('view engine', 'pug'); // set template engine to pug
 
 // override with POST having ?_method=DELETE or ?_method=PUT
 app.use(methodOverride('_method'))
@@ -28,9 +30,10 @@ app.use(methodOverride('_method'))
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser()); // ability to read cookies from the frontend
+app.use(express.static(path.join(__dirname, 'public'))); // serve static files from public folder
 
+// define routes
 require('./routes/index.js')(app);
 require('./routes/pets.js')(app);
 

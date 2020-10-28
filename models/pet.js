@@ -1,9 +1,9 @@
 "use strict";
 
 const mongoose = require('mongoose'),
-        Schema = mongoose.Schema;
-
+Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate');
+
 mongoosePaginate.paginate.options = {
   limit: 3 // results per page
 };

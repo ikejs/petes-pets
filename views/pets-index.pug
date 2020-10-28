@@ -19,7 +19,7 @@ block content
           a.page-link(href=`?term=${term}&page=${currentPage - 1}`) Previous
         else
           a.page-link(href=`?page=${currentPage - 1}`) Previous
-    - var i = 1;
+    - let i = 1;
     while i <= pagesCount
       li.page-item
         if term

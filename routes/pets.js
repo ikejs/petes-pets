@@ -39,30 +39,39 @@ module.exports = (app) => {
 
   // CREATE PET
   app.post('/pets', upload.single('avatar'), (req, res, next) => {
-    console.log(req.file);
-    const pet = new Pet(req.body);
+    if(req.file) {
+      const pet = new Pet(req.body);
+      // Upload the images
+      client.upload(req.file.path, {}, function (err, versions, meta) {
+        if (err) { return res.status(400).send({ err: err }) };
 
-    pet.save()
-      .then((pet) => {
-        res.send({ pet: pet });
-      })
-      .catch((err) => {
-        // STATUS OF 400 FOR VALIDATIONS
-        res.status(400).send(err.errors);
+        // Pop off the -square and -standard and just use the one URL to grab the image
+        versions.forEach((image) => {
+          const urlArray = image.url.split('-');
+          urlArray.pop();
+          const url = urlArray.join('-');
+          pet.avatarUrl = url;
+          pet.save();
+        });
+
+        res.send({ pet });
       });
+    } else {
+      res.send({ pet });
+    }
   });
 
   // SHOW PET
   app.get('/pets/:id', (req, res) => {
     Pet.findById(req.params.id).exec((err, pet) => {
-      res.render('pets-show', { pet: pet });
+      res.render('pets-show', { pet });
     });
   });
 
   // EDIT PET
   app.get('/pets/:id/edit', (req, res) => {
     Pet.findById(req.params.id).exec((err, pet) => {
-      res.render('pets-edit', { pet: pet });
+      res.render('pets-edit', { pet });
     });
   });
 
